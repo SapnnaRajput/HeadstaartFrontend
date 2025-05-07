@@ -436,14 +436,14 @@ const WaitlistForm = () => {
                                                 Email Address
                                                 <span className="text-red-500 ml-1">*</span>
                                             </label>
-                                            <div className="flex gap-3 w-full">
+                                            <div className="flex flex-col sm:flex-row gap-3 w-full">
                                                 <input
                                                     type="email"
                                                     name="email"
                                                     value={formData.email}
                                                     onChange={handleInputChange}
                                                     placeholder="Enter Email Address"
-                                                    className={`flex-1 px-2.5 py-2 text-md border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isEmailVerified
+                                                    className={`w-full px-2.5 py-2 text-md border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isEmailVerified
                                                         ? "bg-green-50 border-green-500"
                                                         : ""
                                                         }`}
@@ -455,7 +455,7 @@ const WaitlistForm = () => {
                                                         disabled={
                                                             sendingOtp || otpTimer > 0 || !formData.email
                                                         }
-                                                        className={`whitespace-nowrap px-6 py-3 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${sendingOtp || otpTimer > 0
+                                                        className={`w-full sm:w-auto whitespace-nowrap px-6 py-2 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${sendingOtp || otpTimer > 0
                                                             ? "bg-gray-400 cursor-not-allowed"
                                                             : "bg-blue-500 hover:bg-blue-600"
                                                             }`}
@@ -483,22 +483,22 @@ const WaitlistForm = () => {
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                                     Enter OTP<span className="text-red-500 ml-1">*</span>
                                                 </label>
-                                                <div className="flex gap-3">
+                                                <div className="flex flex-col sm:flex-row gap-3">
                                                     <input
                                                         type="text"
                                                         name="otp"
                                                         value={formData.otp}
                                                         onChange={handleInputChange}
                                                         placeholder="Enter OTP"
-                                                        className="flex-1 px-4 py-3 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                                                        className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                                                         disabled={verifyingOtp}
                                                     />
                                                     <button
                                                         onClick={handleOTPSubmit}
                                                         disabled={verifyingOtp || !formData.otp}
-                                                        className={`whitespace-nowrap px-6 py-3 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${verifyingOtp || !formData.otp
-                                                            ? "bg-gray-400 cursor-not-allowed"
-                                                            : "bg-green-500 hover:bg-green-600"
+                                                        className={`w-full sm:w-auto whitespace-nowrap px-6 py-2.5 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${verifyingOtp || !formData.otp
+                                                                ? "bg-gray-400 cursor-not-allowed"
+                                                                : "bg-green-500 hover:bg-green-600"
                                                             }`}
                                                     >
                                                         {verifyingOtp ? "Verifying..." : "Verify OTP"}
@@ -624,7 +624,7 @@ const WaitlistForm = () => {
                                             />
                                             <span className="text-md">
                                                 I have read and agree to the{" "}
-                                                <Link to={`/terms-conditions?type=${type}`} target="_blank" className="text-blue-600">
+                                                <Link to={`/terms-conditions`} target="_blank" className="text-blue-600">
                                                     Terms of Service
                                                 </Link>
                                             </span>

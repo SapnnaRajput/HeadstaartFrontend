@@ -223,7 +223,7 @@ const SignupForm = () => {
     }
 
     if (!formData.zip_code || !/^\d{4,12}$/.test(formData.zip_code)) {
-      notify("error","Please enter a valid zip code (4 to 12 digits)");
+      notify("error", "Please enter a valid zip code (4 to 12 digits)");
       return false;
     }
 
@@ -237,12 +237,12 @@ const SignupForm = () => {
       return false;
     }
 
-    if(!formData.email){
+    if (!formData.email) {
       notify("error", "Please enter email");
       return false;
     }
 
-    if(formData.confirmPassword === ''){
+    if (formData.confirmPassword === '') {
       notify("error", "Please enter confirm password");
       return false
     }
@@ -277,7 +277,7 @@ const SignupForm = () => {
   };
 
   const handleSignupClick = async () => {
-   
+
     try {
       if (!validateForm()) {
         return;
@@ -286,7 +286,7 @@ const SignupForm = () => {
         notify("error", "Please verify your email before signing up");
         return;
       }
-      if(!agreeToTerms){
+      if (!agreeToTerms) {
         notify("error", "Please Accept Our Terms And Condition");
         return;
       }
@@ -459,13 +459,12 @@ const SignupForm = () => {
                     className="h-12 w-auto max-w-full"
                   />
                 </div>
-                
+
               </div>
 
               <div className="text-center mb-3">
-                <div className={`transform transition-all duration-700 ease-out p-2 ${
-                  isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-                }`}>
+                <div className={`transform transition-all duration-700 ease-out p-2 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                  }`}>
                   <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent relative group">
                     <span className="text-black">Hello ,</span>  {capitalizeFirstLetter(type)}
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100" />
@@ -584,18 +583,17 @@ const SignupForm = () => {
                         Email Address
                         <span className="text-red-500 ml-1">*</span>
                       </label>
-                      <div className="flex gap-3 w-full">
+                      <div className="flex flex-col sm:flex-row gap-3 w-full">
                         <input
                           type="email"
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
                           placeholder="Enter Email Address"
-                          className={`flex-1 px-2.5 py-2 text-md border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                            isEmailVerified
-                              ? "bg-green-50 border-green-500"
-                              : ""
-                          }`}
+                          className={`w-full px-2.5 py-2 text-md border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${isEmailVerified
+                            ? "bg-green-50 border-green-500"
+                            : ""
+                            }`}
                           disabled={isEmailVerified || sendingOtp}
                         />
                         {!isEmailVerified && (
@@ -604,19 +602,18 @@ const SignupForm = () => {
                             disabled={
                               sendingOtp || otpTimer > 0 || !formData.email
                             }
-                            className={`whitespace-nowrap px-6 py-3 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-                              sendingOtp || otpTimer > 0
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-blue-500 hover:bg-blue-600"
-                            }`}
+                            className={`w-full sm:w-auto whitespace-nowrap px-6 py-2 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${sendingOtp || otpTimer > 0
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-blue-500 hover:bg-blue-600"
+                              }`}
                           >
                             {sendingOtp
                               ? "Sending..."
                               : otpTimer > 0
-                              ? `Resend in ${formatTime(otpTimer)}`
-                              : otpSent
-                              ? "Resend OTP"
-                              : "Send OTP"}
+                                ? `Resend in ${formatTime(otpTimer)}`
+                                : otpSent
+                                  ? "Resend OTP"
+                                  : "Send OTP"}
                           </button>
                         )}
                       </div>
@@ -633,24 +630,23 @@ const SignupForm = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                           Enter OTP<span className="text-red-500 ml-1">*</span>
                         </label>
-                        <div className="flex gap-3">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           <input
                             type="text"
                             name="otp"
                             value={formData.otp}
                             onChange={handleInputChange}
                             placeholder="Enter OTP"
-                            className="flex-1 px-4 py-3 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                            className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                             disabled={verifyingOtp}
                           />
                           <button
                             onClick={handleOTPSubmit}
                             disabled={verifyingOtp || !formData.otp}
-                            className={`whitespace-nowrap px-6 py-3 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${
-                              verifyingOtp || !formData.otp
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : "bg-green-500 hover:bg-green-600"
-                            }`}
+                            className={`w-full sm:w-auto whitespace-nowrap px-6 py-2.5 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ${verifyingOtp || !formData.otp
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-green-500 hover:bg-green-600"
+                              }`}
                           >
                             {verifyingOtp ? "Verifying..." : "Verify OTP"}
                           </button>
@@ -761,9 +757,8 @@ const SignupForm = () => {
                         name="agent_percentage"
                         value={agentInputPercentage}
                         onChange={handleAgentPercentageChange}
-                        className={`w-full px-2.5 py-2 text-md border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                          agentPercentageError ? "border-red-500" : ""
-                        }`}
+                        className={`w-full px-2.5 py-2 text-md border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${agentPercentageError ? "border-red-500" : ""
+                          }`}
                         placeholder={`Maximum allowed: ${agentPercentage}%`}
                       />
                       {agentPercentageError && (
@@ -838,7 +833,7 @@ const SignupForm = () => {
                       />
                       <span className="text-md">
                         I have read and agree to the{" "}
-                        <Link to={`/terms-conditions?type=${type}`} target="_blank" className="text-blue-600">
+                        <Link to={`/terms-conditions`} target="_blank" className="text-blue-600">
                           Terms of Service
                         </Link>
                       </span>
@@ -847,12 +842,12 @@ const SignupForm = () => {
                   </div>
 
                   <div className="flex justify-center">
-                  <button
-                    onClick={handleSignupClick}
-                    className="px-4 bg-[#4A3AFF] text-white py-3 text-md rounded-lg transition-colors"
-                  >
-                    Create an account
-                  </button>
+                    <button
+                      onClick={handleSignupClick}
+                      className="px-4 bg-[#4A3AFF] text-white py-3 text-md rounded-lg transition-colors"
+                    >
+                      Create an account
+                    </button>
                   </div>
 
                   <p className="col-span-2 text-center text-md">
