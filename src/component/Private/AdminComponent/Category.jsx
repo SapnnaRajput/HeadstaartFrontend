@@ -10,9 +10,12 @@ const Category = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [currentCategory, setCurrentCategory] = useState({});
-  const [category, setCategory] = useState([]);
+  const [legalCategories, setLegalCategory] = useState([]);
+  const [industrialCategory, setIndustrialCategory] = useState([]);
   const { user } = UserState();
   const [isLoading, setIsLoading] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('industrial');
 
   async function GetCategory() {
     try {
@@ -21,15 +24,16 @@ const Category = () => {
           Authorization: `Bearer ${user?.token}`,
         },
       });
-      setCategory(response.data.category);
+      setLegalCategory(response.data.legal_categories);
+      setIndustrialCategory(response.data.industrial_categories);
     } catch (error) {
       notify("error", error.message);
-    } 
+    }
   }
 
-  async function AddCategory(category_name, category_code) {
+  async function AddCategory(category_name, category_code, category_type) {
     try {
-      const payload = { category_name, category_code };
+      const payload = { category_name, category_code, category_type };
       const response = await axios.post(`${baseUrl}/add_category`, payload, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -69,9 +73,9 @@ const Category = () => {
     }
   };
 
-  const EditCategory = async (category_id, category_name, category_code) => {
+  const EditCategory = async (category_id, category_name, category_code, category_type) => {
     try {
-      const payload = { category_id, category_name, category_code };
+      const payload = { category_id, category_name, category_code, category_type };
       const response = await axios.post(`${baseUrl}/update_category`, payload, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -109,6 +113,29 @@ const Category = () => {
           </div>
 
           <div className="p-4 md:p-6 overflow-x-auto">
+            <div className="border-b border-gray-200 mb-4">
+              <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                <button
+                  onClick={() => setActiveTab('industrial')}
+                  className={`${activeTab === 'industrial'
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                >
+                  Industrial Category ({industrialCategory.length})
+                </button>
+                <button
+                  onClick={() => setActiveTab('legal')}
+                  className={`${activeTab === 'legal'
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+                >
+                  Legal Category ({legalCategories.length})
+                </button>
+              </nav>
+            </div>
+
             {isLoading ? (
               <div className="flex justify-center py-12">
                 <div className="text-center">
@@ -116,7 +143,7 @@ const Category = () => {
                   <p className="mt-2 text-gray-600">Loading categories...</p>
                 </div>
               </div>
-            ) : category.length === 0 ? (
+            ) : industrialCategory.length === 0 ? (
               <div className="text-center py-12">
                 <svg
                   className="mx-auto h-12 w-12 text-gray-400"
@@ -158,7 +185,7 @@ const Category = () => {
                   </button>
                 </div>
               </div>
-            ) : (
+            ) : (activeTab === 'industrial' ? industrialCategory : legalCategories).length != 0 ? (
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr className="bg-gray-50">
@@ -189,7 +216,7 @@ const Category = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {category.map((cat) => (
+                  {(activeTab === 'industrial' ? industrialCategory : legalCategories).map((cat) => (
                     <tr key={cat.category_id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm font-medium text-gray-900">{cat.category_name}</div>
@@ -203,16 +230,14 @@ const Category = () => {
                         <div className="flex items-center">
                           <button
                             onClick={() => handleToggle(cat.category_id, cat.status)}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                              cat.status === "Active" ? "bg-indigo-600" : "bg-gray-200"
-                            }`}
+                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${cat.status === "Active" ? "bg-indigo-600" : "bg-gray-200"
+                              }`}
                             role="switch"
                             aria-checked={cat.status === "Active"}
                           >
                             <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                cat.status === "Active" ? "translate-x-5" : "translate-x-0"
-                              }`}
+                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${cat.status === "Active" ? "translate-x-5" : "translate-x-0"
+                                }`}
                             />
                           </button>
                           <span className={`ml-3 text-sm ${cat.status === "Active" ? "text-green-600 font-medium" : "text-gray-500"}`}>
@@ -235,6 +260,8 @@ const Category = () => {
                   ))}
                 </tbody>
               </table>
+            ) : (
+              <p>Hello</p>
             )}
           </div>
         </div>
@@ -266,13 +293,15 @@ const Category = () => {
                           e.preventDefault();
                           const categoryName = e.target.category_name.value.trim();
                           const categoryCode = e.target.category_code.value.trim();
+                          const categoryType = e.target.category_type.value.trim();
 
-                          if (!categoryName || !categoryCode) {
-                            alert("Both fields are required.");
+
+                          if (!categoryName || !categoryCode || !categoryType) {
+                            alert("All fields are required.");
                             return;
                           }
 
-                          AddCategory(categoryName, categoryCode);
+                          AddCategory(categoryName, categoryCode, categoryType);
                           setIsModalOpen(false);
                         }}
                       >
@@ -299,6 +328,20 @@ const Category = () => {
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             placeholder="Enter category code"
                           />
+                        </div>
+                        <div className="mb-4">
+                          <label htmlFor="category_type" className="block text-sm font-medium text-gray-700 mb-1">
+                            Category Type
+                          </label>
+                          <select
+                            name="category_type"
+                            id="category_type"
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                          >
+                            <option value="">Select category type</option>
+                            <option value="industrial">Industrial</option>
+                            <option value="legal">Legal</option>
+                          </select>
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                           <button
@@ -351,7 +394,8 @@ const Category = () => {
                           EditCategory(
                             currentCategory.category_id,
                             currentCategory.category_name,
-                            currentCategory.category_code
+                            currentCategory.category_code,
+                            currentCategory.category_type
                           );
                           setEditModal(false);
                         }}
@@ -389,6 +433,26 @@ const Category = () => {
                             }
                             className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                           />
+                        </div>
+                        <div className="mb-4">
+                          <label htmlFor="edit_category_type" className="block text-sm font-medium text-gray-700 mb-1">
+                            Category Type
+                          </label>
+                          <select
+                            id="edit_category_type"
+                            value={currentCategory.category_type}
+                            onChange={(e) =>
+                              setCurrentCategory({
+                                ...currentCategory,
+                                category_type: e.target.value,
+                              })
+                            }
+                            className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
+                          >
+                            <option value="">Select category type</option>
+                            <option value="industrial">Industrial</option>
+                            <option value="legal">Legal</option>
+                          </select>
                         </div>
                         <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                           <button

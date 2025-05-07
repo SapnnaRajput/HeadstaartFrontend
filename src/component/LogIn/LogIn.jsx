@@ -516,7 +516,7 @@ const LoginComponent = () => {
               </button>
             </div>
 
-            <p className="mt-6 md:mt-8 text-center text-sm text-gray-600">
+            {/* <p className="mt-6 md:mt-8 text-center text-sm text-gray-600">
               Don't have an account?{" "}
               <Link
                 to="/sign-up-as"
@@ -524,7 +524,7 @@ const LoginComponent = () => {
               >
                 Sign Up
               </Link>
-            </p>
+            </p> */}
           </div>
         </div>
       </div>

@@ -75,12 +75,12 @@ function SignIn() {
                                 Next
                             </button>
 
-                            <p className="text-center text-gray-600 mt-6">
+                            {/* <p className="text-center text-gray-600 mt-6">
                                 Don't have an account?{' '}
                                 <Link to="/sign-up-as" className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200 hover:underline">
                                     Sign Up
                                 </Link>
-                            </p>
+                            </p> */}
                         </div>
                     </div>
                 </div>

@@ -168,7 +168,7 @@ function App() {
         <Routes>
         <Route path="/login" element={<LoginElement />} />
           <Route path="/waitlist" element={<Waitlist />} />
-          <Route path="/sign-up-as" element={<SignIn />} />
+          <Route path="/sign-up-as" element={<SignIn />} /> 
           <Route path="/login-as" element={<LoginAs />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/" element={<Home />} />
