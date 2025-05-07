@@ -1,0 +1,10 @@
+1) add screen for login as 
+2) inside active leads click on project show deatils of project
+3) change heading as ai creation
+4)change boder colcor of template radio button and add preview button on top corner 
+5) add next button on top of scrren 
+6) add size of image in question
+7) wrong size image upload cenario
+8) add date for document 
+9) search box dont show box 
+10) doller sign add inside funding amount
