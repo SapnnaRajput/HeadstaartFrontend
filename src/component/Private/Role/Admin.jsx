@@ -21,7 +21,8 @@ import {
   BadgeCheck,
   HandPlatter,
   FolderGit2,
-  Timer
+  Timer,
+  Users
 } from "lucide-react";
 import Dashboard from "../AdminComponent/AdminDashboard";
 import UserManagement from "../AdminComponent/UserManagement";
@@ -51,6 +52,7 @@ import { GrTransaction } from "react-icons/gr";
 import ManageLeadAdmin from "../AdminComponent/ManageLeadAdmin";
 import LeadManage from "../AdminComponent/LeadManage";
 import Credentials from "../AdminComponent/Credentials";
+import EmployeeManagement from "../AdminComponent/EmployeeManagement";
 
 const Admin = () => {
   const Links = [
@@ -143,6 +145,11 @@ const Admin = () => {
       to: "waitlists",
       name: "Waitlists",
       icon: Timer,
+    },
+    {
+      to: "employee-management",
+      name: "Employee Management",
+      icon: Users,
     }
   ];
 
@@ -222,12 +229,12 @@ const Admin = () => {
           </>
         )}
 
-
         <div className="flex-grow bg-gray-100 overflow-y-auto">
           <div className="container mx-auto max-w-full">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/user-manager" element={<UserManagement />} />
+              <Route path="/employee-management" element={<EmployeeManagement />} />
               <Route path="/user-manager/:userID" element={<UserDetail />} />
               <Route path="/managelead/:customer_unique_id" element={<ManageLeadAdmin />} />
               <Route

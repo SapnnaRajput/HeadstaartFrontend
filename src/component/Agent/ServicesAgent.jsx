@@ -17,6 +17,7 @@ const ServicesAgent = () => {
   const [services, setServices] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [pricePerLead, setPricePerLead] = useState('');
+  const [serviceName, setServiceName] = useState('');
   const [description, setDescription] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editingServiceId, setEditingServiceId] = useState(null);
@@ -54,7 +55,7 @@ const ServicesAgent = () => {
       notify(
         'error',
         error.response?.data?.message ||
-          'Unauthorized access, please login again'
+        'Unauthorized access, please login again'
       );
     } finally {
       setLoading(false);
@@ -98,6 +99,7 @@ const ServicesAgent = () => {
     setEditingServiceId(service.agent_service_unique_id);
     setSelectedCategoryId(service.category.category_id);
     setPricePerLead(service.price_per_lead);
+    setServiceName(service.service_name);
     setDescription(service.description);
     setOpenModal(true);
     setActiveMenu(null);
@@ -133,6 +135,7 @@ const ServicesAgent = () => {
         {
           customer_unique_id: user?.customer?.customer_unique_id,
           category_id: selectedCategoryId.value,
+          service_name: serviceName,
           price_per_lead: pricePerLead,
           description: description,
         },
@@ -172,6 +175,7 @@ const ServicesAgent = () => {
           customer_unique_id: user?.customer?.customer_unique_id,
           agent_service_unique_id: editingServiceId,
           category_id: selectedCategoryId.value,
+          service_name: serviceName,
           description: description,
         },
         {
@@ -251,16 +255,18 @@ const ServicesAgent = () => {
             >
               <div className="w-full">
                 <div className="flex justify-between items-center my-1">
-                  <h2 className="text-lg font-semibold text-black">
-                    {service.category.category_name}
-                  </h2>
+                  <div>
+                    <h2 className="text-lg font-semibold text-black">
+                      {service.service_name}
+                    </h2>
+                    <span className='text-[#4A3AFF] text-sm'>{service.category.category_name}</span>
+                  </div>
                   <div className="flex justify-between items-center">
                     <span
-                      className={`px-4 h-8 flex justify-center items-center py-1 text-sm font-semibold rounded-full ${
-                        service.status === 'Active'
-                          ? 'bg-green-100 text-green-600'
-                          : 'bg-red-100 text-red-600'
-                      }`}
+                      className={`px-4 h-8 flex justify-center items-center py-1 text-sm font-semibold rounded-full ${service.status === 'Active'
+                        ? 'bg-green-100 text-green-600'
+                        : 'bg-red-100 text-red-600'
+                        }`}
                     >
                       {service.status}
                     </span>
@@ -300,15 +306,15 @@ const ServicesAgent = () => {
                   </div>
                 </div>
                 <p className="text-gray-500 text-sm mt-2">
-        {expanded || service.description.length <= maxLength
-          ? service.description
-          : `${service.description.substring(0, maxLength)}...`}
-      </p>
-      {service.description.length > maxLength && (
-        <button className="text-blue-500 text-sm mt-1" onClick={toggleExpand}>
-          {expanded ? "See Less" : "See More"}
-        </button>
-      )}
+                  {expanded || service.description.length <= maxLength
+                    ? service.description
+                    : `${service.description.substring(0, maxLength)}...`}
+                </p>
+                {service.description.length > maxLength && (
+                  <button className="text-blue-500 text-sm mt-1" onClick={toggleExpand}>
+                    {expanded ? "See Less" : "See More"}
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -321,9 +327,19 @@ const ServicesAgent = () => {
         </Modal.Header>
         <Modal.Body>
           <div className="space-y-4">
-            <label htmlFor="serviceName" className="block font-medium mb-1">
-              Service Name
-            </label>
+            <div>
+              <label htmlFor="serviceName" className="block font-medium mb-1">
+                Service Name
+              </label>
+              <input
+                id="service_name"
+                type="text"
+                className="border border-gray-300 rounded-md px-3 py-2 w-full"
+                value={serviceName}
+                onChange={(e) => setServiceName(e.target.value)}
+              />
+            </div>
+
             <div className="space-y-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Industry</label>

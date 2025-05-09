@@ -8,7 +8,7 @@ import Loader from "../../../Utiles/Loader";
 import Pagination from "../../../Utiles/Pagination";
 import { useNavigate, Link } from "react-router-dom";
 
-const UserManagement = () => {
+const PriviligedUsers = () => {
   const formatDateToYYYYMMDD = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -28,6 +28,9 @@ const UserManagement = () => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeMenuId, setActiveMenuId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+
   const [registrationDateStart, setRegistrationDateStart] = useState(
     getDefaultDates().start
   );
@@ -44,7 +47,6 @@ const UserManagement = () => {
   const [data, setData] = useState([]);
   const [datas, setDatas] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate()
 
   const dateFormate = (startDate) => {
@@ -60,19 +62,18 @@ const UserManagement = () => {
   const allData = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${baseUrl}/get_all_customer`,
-        {
-          min_date: registrationDateStart,
-          max_date: registrationDateEnd,
-        },
+      const response = await axios.get(
+        `${baseUrl}/get_all_users`,
         {
           headers: {
             Authorization: `Bearer ${user?.token}`,
           },
         }
       );
-      setData(response.data.customers);
+
+      console.log(response.data.data);
+
+      setData(response.data.data);
     } catch (error) {
       notify("error", error.message);
     } finally {
@@ -80,25 +81,25 @@ const UserManagement = () => {
     }
   };
 
-  const allDatas = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`${baseUrl}/get_sub_name`, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      setDatas(response.data.data);
-    } catch (error) {
-      notify("error", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const allDatas = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios.get(`${baseUrl}/get_sub_name`, {
+  //       headers: {
+  //         Authorization: `Bearer ${user?.token}`,
+  //       },
+  //     });
+  //     setDatas(response.data.data);
+  //   } catch (error) {
+  //     notify("error", error.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    allDatas();
-  }, []);
+  // useEffect(() => {
+  //   allDatas();
+  // }, []);
 
   useEffect(() => {
     allData();
@@ -118,7 +119,7 @@ const UserManagement = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${baseUrl}/customer_status_change`,
+        `${baseUrl}/user_status_change`,
         {
           customer_unique_id: eventId,
           status: currentStatus === "Active" ? "Inactive" : "Active",
@@ -178,77 +179,14 @@ const UserManagement = () => {
       {loading && <Loader />}
       <div className="p-6 max-w-full bg-gray-50">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-xl font-semibold">User Management</h1>
+          <h1 className="text-xl font-semibold">Employee Management</h1>
           <button onClick={() => setIsModalOpen(true)}
             className="px-5 py-2.5 text-base font-medium text-white bg-[#4A3AFF] rounded-lg hover:bg-[#3D32CC] shadow-sm transition-all duration-200"
           >
-            Add User
+            Add Employee
           </button>
         </div>
 
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <button className="p-2 bg-gray-50 rounded-full">
-              <Filter className="w-5 h-5" />
-            </button>
-
-            <input
-              type="date"
-              value={registrationDateStart}
-              onChange={(e) => setRegistrationDateStart(e.target.value)}
-              className="px-3 py-2 border rounded-md w-48 text-sm"
-            />
-            <input
-              type="date"
-              value={registrationDateEnd}
-              onChange={(e) => setRegistrationDateEnd(e.target.value)}
-              className="px-3 py-2 border rounded-md w-48 text-sm"
-            />
-
-            <select
-              value={subscriptionType}
-              onChange={(e) => setSubscriptionType(e.target.value)}
-              className="px-3 py-2 border rounded-md w-48 text-sm"
-            >
-              <option value="">Subscription Type</option>
-              {datas.map((list, i) => (
-                <option key={i} value={list.subscription_name}>
-                  {list.subscription_name}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={userActivity}
-              onChange={(e) => setUserActivity(e.target.value)}
-              className="px-3 py-2 border rounded-md w-48 text-sm"
-            >
-              <option value="">User Activity</option>
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
-
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="px-3 py-2 border rounded-md w-48 text-sm"
-            >
-              <option value="">Role</option>
-              <option value="entrepreneur">Entrepreneur</option>
-              <option value="investor">Investor</option>
-              <option value="agent">Agent</option>
-            </select>
-
-
-            <button
-              onClick={handleResetFilter}
-              className="flex items-center gap-2 text-red-600 px-4 py-2"
-            >
-              <RefreshCcw className="w-4 h-4" />
-              Reset Filter
-            </button>
-          </div>
-        </div>
         <div className="flex items-center justify-end mb-4">
           <div className="relative w-full sm:w-64">
             <input
@@ -270,16 +208,13 @@ const UserManagement = () => {
                   Name
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subscription
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User Type
+                  Role
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Registration Date
+                  Creation Date
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Action
@@ -312,9 +247,6 @@ const UserManagement = () => {
                           </div>
                         </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {user.subscription?.subscription_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">
                       {user.role}
@@ -373,7 +305,7 @@ const UserManagement = () => {
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                       <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                        Add Free Access User
+                        Add Privileged User
                       </h3>
                       <div className="mt-4">
                         <form
@@ -381,7 +313,6 @@ const UserManagement = () => {
                             e.preventDefault();
                             const fullName = e.target.full_name.value.trim();
                             const email = e.target.email.value.trim();
-                            const phone = e.target.phone.value.trim();
                             const role = e.target.role.value.trim();
                             const subscription = e.target.subscription.value.trim();
                             const password = e.target.password.value.trim();
@@ -391,14 +322,14 @@ const UserManagement = () => {
                             const agent_percentage = e.target.agent_percentage?.value?.trim() || null;
                             const is_student = e.target.is_student?.checked || false;
 
-                            if (!fullName || !email || !phone || !role || !subscription || !password) {
+                            if (!fullName || !email || !role || !subscription || !password) {
                               notify("error", "All fields are required.");
                               return;
                             }
 
-                            if (role == "agent" && !agent_percentage) {
+                            if(role == "agent" && !agent_percentage){
                               notify("error", "Agent percentage is required.");
-                              return;
+                              return;   
                             }
 
                             try {
@@ -409,7 +340,6 @@ const UserManagement = () => {
                                   full_name: fullName,
                                   email,
                                   role,
-                                  phone,
                                   subscription_name: subscription,
                                   password,
                                   agent_percentage,
@@ -456,19 +386,6 @@ const UserManagement = () => {
                               id="email"
                               className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                               placeholder="Enter email address"
-                            />
-                          </div>
-
-                          <div className="mb-4">
-                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                              Phone
-                            </label>
-                            <input
-                              type="phone"
-                              name="phone"
-                              id="phone"
-                              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
-                              placeholder="Enter phone number"
                             />
                           </div>
 
@@ -589,4 +506,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default PriviligedUsers;
