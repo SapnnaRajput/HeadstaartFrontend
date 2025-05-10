@@ -305,7 +305,7 @@ const PriviligedUsers = () => {
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                       <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                        Add Privileged User
+                        Add Employee
                       </h3>
                       <div className="mt-4">
                         <form
@@ -314,36 +314,36 @@ const PriviligedUsers = () => {
                             const fullName = e.target.full_name.value.trim();
                             const email = e.target.email.value.trim();
                             const role = e.target.role.value.trim();
-                            const subscription = e.target.subscription.value.trim();
+                            // const subscription = e.target.subscription.value.trim();
                             const password = e.target.password.value.trim();
                             // const agent_percentage = e.target.agent_percentage.value.trim() || null;
                             // const is_student = e.target.is_student.value.trim() || false;
 
-                            const agent_percentage = e.target.agent_percentage?.value?.trim() || null;
-                            const is_student = e.target.is_student?.checked || false;
+                            // const agent_percentage = e.target.agent_percentage?.value?.trim() || null;
+                            // const is_student = e.target.is_student?.checked || false;
 
-                            if (!fullName || !email || !role || !subscription || !password) {
+                            if (!fullName || !email || !role || !password) {
                               notify("error", "All fields are required.");
                               return;
                             }
 
-                            if(role == "agent" && !agent_percentage){
-                              notify("error", "Agent percentage is required.");
-                              return;   
-                            }
+                            // if(role == "agent" && !agent_percentage){
+                            //   notify("error", "Agent percentage is required.");
+                            //   return;   
+                            // }
 
                             try {
                               setLoading(true);
                               const response = await axios.post(
-                                `${baseUrl}/create_privileged_user`,
+                                `${baseUrl}/add_employee`,
                                 {
                                   full_name: fullName,
                                   email,
                                   role,
-                                  subscription_name: subscription,
+                                  // subscription_name: subscription,
                                   password,
-                                  agent_percentage,
-                                  is_student: is_student
+                                  // agent_percentage,
+                                  // is_student: is_student
                                 },
                                 {
                                   headers: {
@@ -400,58 +400,8 @@ const PriviligedUsers = () => {
                               className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             >
                               <option value="">Select role</option>
-                              <option value="agent">Agent</option>
-                              <option value="investor">Investor</option>
-                              <option value="entrepreneur">Entrepreneur</option>
-                            </select>
-                          </div>
-
-                          {role === 'agent' && (
-                            <div className="mb-4">
-                              <label htmlFor="agent_percentage" className="block text-sm font-medium text-gray-700 mb-1">
-                                Agent Percentage
-                              </label>
-                              <input
-                                type="number"
-                                name="agent_percentage"
-                                id="agent_percentage"
-                                min="0"
-                                max="100"
-                                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
-                                placeholder="Enter percentage"
-                              />
-                            </div>
-                          )}
-
-                          {role === 'entrepreneur' && (
-                            <div className="mb-4">
-                              <div className="flex items-center">
-                                <input
-                                  type="checkbox"
-                                  name="is_student"
-                                  id="is_student"
-                                  className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                                />
-                                <label htmlFor="is_student" className="ml-2 block text-sm text-gray-700">
-                                  Select if the user is a student.
-                                </label>
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="mb-4">
-                            <label htmlFor="subscription" className="block text-sm font-medium text-gray-700 mb-1">
-                              Subscription Plan
-                            </label>
-                            <select
-                              name="subscription"
-                              id="subscription"
-                              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
-                            >
-                              <option value="">Select subscription</option>
-                              <option value="basic">Basic</option>
-                              <option value="pro">Pro</option>
-                              <option value="elite">Elite</option>
+                              <option value="admin">Admin</option>
+                              <option value="employee">Employee</option>
                             </select>
                           </div>
 

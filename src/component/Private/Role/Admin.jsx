@@ -22,7 +22,8 @@ import {
   HandPlatter,
   FolderGit2,
   Timer,
-  Users
+  Users,
+  Logs
 } from "lucide-react";
 import Dashboard from "../AdminComponent/AdminDashboard";
 import UserManagement from "../AdminComponent/UserManagement";
@@ -53,6 +54,7 @@ import ManageLeadAdmin from "../AdminComponent/ManageLeadAdmin";
 import LeadManage from "../AdminComponent/LeadManage";
 import Credentials from "../AdminComponent/Credentials";
 import EmployeeManagement from "../AdminComponent/EmployeeManagement";
+import ActivityLogs from '../AdminComponent/ActivityLogs';
 
 const Admin = () => {
   const Links = [
@@ -140,6 +142,11 @@ const Admin = () => {
       to: "setting",
       name: "Settings",
       icon: Settings,
+    },
+    {
+      to: "activity-logs",
+      name: "Activity Logs",
+      icon: Logs,
     },
     {
       to: "waitlists",
@@ -269,6 +276,7 @@ const Admin = () => {
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/lead-manage" element={<LeadManage />} />
               <Route path="/credentials" element={<Credentials />} />
+              <Route path="/activity-logs" element={<ActivityLogs />} />
             </Routes>
           </div>
         </div>

@@ -221,6 +221,7 @@ function App() {
               user?.role == 'superadmin' ? (
                 <Navigate to="/superadmin/dashboard" />
               ) : user?.role ? (
+                // <Navigate to="/superadmin/dashboard" />
                 <Navigate replace to={`/${user.role}/dashboard`} />
               ) : (
                 <ManageLogin />

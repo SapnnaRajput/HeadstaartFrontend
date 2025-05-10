@@ -18,7 +18,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   const Login = async () => {
-    if(!email || !password){
+    if (!email || !password) {
       notify('error', 'Please enter email and password');
       return;
     }
@@ -28,17 +28,23 @@ export default function LoginForm() {
         email: email,
         password: password
       });
+      // console.log(response);
       if (response.data.status) {
         const { user, token } = response.data;
         const userData = { ...user, token };
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(response.data);
         notify('success', 'Logged in successfully');
-      }else{
+      } else {
+        alert(response.data.message);
         notify('error', response.data.message);
       }
     } catch (err) {
-      notify('error' , 'Invalid Credentials')
+      if(err.response.data.message){
+        notify('error', err.response.data.message)
+        return
+      }
+      notify('error', 'Invalid Credentials')
       console.log(err)
     }
     setLoading(false)
@@ -52,7 +58,7 @@ export default function LoginForm() {
           <h1 className="text-2xl font-semibold text-center text-gray-800 mb-2">
             Login to Account
           </h1>
-         
+
 
           <div className="space-y-6">
             <div className="space-y-2">
