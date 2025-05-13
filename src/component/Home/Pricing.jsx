@@ -1,7 +1,8 @@
-import React from 'react';
+import  { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Foooter from './Foooter';
 import { FiCheck, FiCircle, FiStar, FiAward } from 'react-icons/fi';
+import axios from 'axios';
 
 const PricingCard = ({ title, price, features, tier }) => {
   const getTierIcon = () => {
@@ -82,188 +83,216 @@ const PlanSection = ({ title, icon, plans }) => {
 };
 
 const Pricing = () => {
-  const entrepreneurPlans = [
-    {
-      title: "Basic",
-      price: 15,
-      annualPrice: 180,
-      tier: "basic",
-      features: [
-        { name: "Project Submission", description: "Launch and showcase your business projects/year", value: "3" },
-        { name: "Pitch Deck Builder", description: "Build compelling decks with AI", value: "3" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
-        { name: "Pitch Deck Revision", description: "Edit and refine your decks anytime", value: "3" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "50" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Verification Badge", description: "Badge available for purchase after identity review", value: "Available" },
-      ],
-    },
-    {
-      title: "Pro",
-      price: 49,
-      annualPrice: 588,
-      tier: "pro",
-      features: [
-        { name: "Project Submission", description: "Launch and showcase your business projects/year", value: "5" },
-        { name: "Pitch Deck Builder", description: "Build compelling decks with AI", value: "5" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
-        { name: "Pitch Deck Revision", description: "Edit and refine your decks anytime", value: "5" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "150" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Verification Badge", description: "Badge available for purchase after identity review", value: "Available" },
-      ],
-    },
-    {
-      title: "Elite",
-      price: 199,
-      annualPrice: 2388,
-      tier: "elite",
-      features: [
-        { name: "Project Submission", description: "Launch and showcase your business projects/year", value: "10" },
-        { name: "Pitch Deck Builder", description: "Build compelling decks with AI", value: "10" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Twice a month" },
-        { name: "Pitch Deck Revision", description: "Edit and refine your decks anytime", value: "10" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "No limit" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "No limit" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Verification Badge", description: "Badge available for purchase after identity review", value: "Available" },
-      ],
-    },
-  ];
+  const [subscriptions, setSubscriptions] = useState({
+    entrepreneur: [],
+    agent: [],
+    investor: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const agentPlans = [
-    {
-      title: "Basic",
-      price: 29,
-      annualPrice: 348,
-      tier: "basic",
-      features: [
-        { name: "Search Access", description: "Browse a set number of entrepreneur and investor profiles", value: "250" },
-        { name: "Service Listing", description: "List services in the Agent Directory to attract leads", value: "3" },
-        { name: "Document Review", description: "Basic access to pitch decks and shared documents", value: "100" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "100" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Profile Update", description: "Edit your profile periodically to stay up to date", value: "1" },
-        { name: "Verification Badge", description: "Badge available for purchase after identity review", value: "Available" },
-        { name: "Profile Boost", description: "Boost your profile visibility for higher engagement", value: "10" },
-      ],
-    },
-    {
-      title: "Pro",
-      price: 129,
-      annualPrice: 1548,
-      tier: "pro",
-      features: [
-        { name: "Search Access", description: "Browse a set number of entrepreneur and investor profiles", value: "1000" },
-        { name: "Service Listing", description: "List services in the Agent Directory to attract leads", value: "5" },
-        { name: "Document Review", description: "Basic access to pitch decks and shared documents", value: "500" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "250" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Project Update", description: "Edit your profile periodically to stay up to date", value: "2" },
-        { name: "Verification Badge", description: "Badge available for purchase after identity review", value: "Available" },
-        { name: "Profile Boost", description: "Boost your profile visibility for higher engagement", value: "25" },
-        { name: "Priority Access to High-Value Deals", description: "You have access to High-Value Deals", value: "" },
-        { name: "Profile Visibility Boost", description: "You have access to Boost Profile Visibility", value: "" },
-        { name: "Premium Business Exit Deals", description: "You have access to Premium Business Exit Deals (M&A, Acquisitions)", value: "" },
-        { name: "Exclusive Networking Events for Agents", description: "You have access to Exclusive Networking Events for Agents", value: "" },
-      ],
-    },
-    {
-      title: "Elite",
-      price: 299,
-      annualPrice: 3588,
-      tier: "elite",
-      features: [
-        { name: "Search Access", description: "Browse a set number of entrepreneur and investor profiles", value: "Unlimited" },
-        { name: "Service Listing", description: "List services in the Agent Directory to attract leads", value: "15" },
-        { name: "Document Review", description: "Basic access to pitch decks and shared documents", value: "Unlimited" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "No limit" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Twice a month" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Project Update", description: "Edit your profile periodically to stay up to date", value: "2" },
-        { name: "Verification Badge", description: "Badge available for purchase after identity review", value: "Available" },
-        { name: "Profile Boost", description: "Boost your profile visibility for higher engagement", value: "No limit" },
-        { name: "Priority Access to High-Value Deals", description: "You have access to High-Value Deals", value: "" },
-        { name: "Profile Visibility Boost", description: "You have access to Boost Profile Visibility", value: "" },
-        { name: "Premium Business Exit Deals", description: "You have access to Premium Business Exit Deals (M&A, Acquisitions)", value: "" },
-        { name: "Exclusive Networking Events for Agents", description: "You have access to Exclusive Networking Events for Agents", value: "" },
-      ],
-    },
-  ];
+  useEffect(() => {
+    const fetchSubscriptions = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('https://api.headstaart.com/api/getSubscriptions');
+        
+        if (response.data && response.data.data) {
+          // Process the API response to match our component structure
+          const processedData = {
+            entrepreneur: [],
+            agent: [],
+            investor: []
+          };
 
-  const investorPlans = [
-    {
-      title: "Basic",
-      price: 15,
-      annualPrice: 180,
-      tier: "basic",
-      features: [
-        { name: "Project Search", description: "Explore startups by region or type", value: "250" },
-        { name: "Investor Dashboard", description: "View saved and contacted startups", value: "365 days" },
-        { name: "Connection Access", description: "Contact entrepreneurs and agents yearly", value: "100" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Flag Projects", description: "Request agent help on selected deals", value: "50" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
-        { name: "Fund Verification Badge", description: "Blue tick after fund verification", value: "Available" },
-        { name: "Pitch Deck Access", description: "View decks shared by entrepreneurs", value: "Available" },
-        { name: "Lead Access", description: "Purchase leads to start conversations", value: "100" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "50" },
-        { name: "Entrepreneur Contact Limit", description: "You have access to limited access to chat entrepreneur", value: "5" },
-      ],
-    },
-    {
-      title: "Pro",
-      price: 49,
-      annualPrice: 588,
-      tier: "pro",
-      features: [
-        { name: "Project Search", description: "Explore startups by region or type", value: "20" },
-        { name: "Investor Dashboard", description: "View saved and contacted startups", value: "365 days" },
-        { name: "Connection Access", description: "Contact entrepreneurs and agents yearly", value: "No limit" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Flag Projects", description: "Request agent help on selected deals", value: "150" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
-        { name: "Fund Verification Badge", description: "You have all access to verify your fund", value: "Available" },
-        { name: "Pitch Deck Access", description: "View decks shared by entrepreneurs", value: "Available" },
-        { name: "Lead Access", description: "Purchase leads to start conversations", value: "250" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "100" },
-        { name: "Lead Generation for Custom Business Deals", description: "You have access to Lead Generation for Custom Business Deals", value: "" },
-        { name: "Legal & Due Diligence Document Access", description: "You have access to Legal & Due Diligence Document Access", value: "" },
-        { name: "Entrepreneur Contact Limit", description: "You have access to limited access to chat entrepreneur", value: "50" },
-      ],
-    },
-    {
-      title: "Elite",
-      price: 199,
-      annualPrice: 2388,
-      tier: "elite",
-      features: [
-        { name: "Project Search", description: "Explore startups by region or type", value: "30" },
-        { name: "Investor Dashboard", description: "View saved and contacted startups", value: "365 days" },
-        { name: "Connection Access", description: "Contact entrepreneurs and agents yearly", value: "No limit" },
-        { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
-        { name: "Flag Projects", description: "Request agent help on selected deals", value: "No limit" },
-        { name: "Events Access", description: "Access platform-hosted events based on your subscription", value: "No limit" },
-        { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Twice a month" },
-        { name: "Fund Verification Badge", description: "You have all access to verify your fund", value: "Available" },
-        { name: "Pitch Deck Access", description: "View decks shared by entrepreneurs", value: "Available" },
-        { name: "Lead Access", description: "Purchase leads to start conversations", value: "No Limit" },
-        { name: "Legal Templates", description: "Access to a curated set of legal templates for deals", value: "No limit" },
-        { name: "Lead Generation for Custom Business Deals", description: "You have access to Lead Generation for Custom Business Deals", value: "" },
-        { name: "Legal & Due Diligence Document Access", description: "You have access to Legal & Due Diligence Document Access", value: "" },
-        { name: "Entrepreneur Contact Limit", description: "You have unlimited access to chat entrepreneur", value: "Unlimited" },
-      ],
-    },
-  ];
+          // Process each subscription type
+          Object.entries(response.data.data).forEach(([key, plans]) => {
+            if (key === 'entrepreneur' || key === 'agent' || key === 'investor') {
+              processedData[key] = plans.map(plan => {
+                // Format features from API data
+                const features = [];
+                
+                // Extract features from the plan object
+                Object.entries(plan).forEach(([featureKey, featureValue]) => {
+                  // Skip non-feature properties
+                  if (['id', 'title', 'price', 'tier', 'type', 'created_at', 'updated_at'].includes(featureKey)) {
+                    return;
+                  }
+                  
+                  // Add feature with name and value
+                  features.push({
+                    name: featureKey.replace(/_/g, ' ').split(' ')
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(' '),
+                    description: getFeatureDescription(featureKey),
+                    value: featureValue || ''
+                  });
+                });
+                
+                return {
+                  title: plan.title || '',
+                  price: plan.price || 0,
+                  tier: plan.tier || 'basic',
+                  features: features
+                };
+              });
+            }
+          });
+          
+          setSubscriptions(processedData);
+        }
+      } catch (err) {
+        console.error('Error fetching subscription data:', err);
+        setError('Failed to load subscription data. Please try again later.');
+        // Use fallback data if API fails
+        setSubscriptions({
+          entrepreneur: getFallbackPlans('entrepreneur'),
+          agent: getFallbackPlans('agent'),
+          investor: getFallbackPlans('investor')
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchSubscriptions();
+  }, []);
+
+  // Helper function to get feature descriptions
+  const getFeatureDescription = (featureKey) => {
+    const descriptions = {
+      project_submission: 'Launch and showcase your business projects/year',
+      pitch_deck_builder: 'Build compelling decks with AI',
+      profile_updates: 'Keep your profile fresh and active',
+      pitch_deck_revision: 'Edit and refine your decks anytime',
+      analytics_access: 'Track your reach and visibility',
+      legal_templates: 'Access to a curated set of legal templates for deals',
+      events_access: 'Access platform-hosted events based on your subscription',
+      verification_badge: 'Badge available for purchase after identity review',
+      search_access: 'Browse a set number of entrepreneur and investor profiles',
+      service_listing: 'List services in the Agent Directory to attract leads',
+      document_review: 'Basic access to pitch decks and shared documents',
+      profile_update: 'Edit your profile periodically to stay up to date',
+      profile_boost: 'Boost your profile visibility for higher engagement',
+      project_search: 'Explore startups by region or type',
+      investor_dashboard: 'View saved and contacted startups',
+      connection_access: 'Contact entrepreneurs and agents yearly',
+      flag_projects: 'Request agent help on selected deals',
+      fund_verification_badge: 'Verification after fund review',
+      pitch_deck_access: 'View decks shared by entrepreneurs',
+      lead_access: 'Purchase leads to start conversations',
+      entrepreneur_contact_limit: 'Number of entrepreneurs you can contact'
+    };
+    
+    return descriptions[featureKey] || featureKey.replace(/_/g, ' ');
+  };
+
+  // Fallback data in case API fails
+  const getFallbackPlans = (type) => {
+    if (type === 'entrepreneur') {
+      return [
+        {
+          title: "Basic",
+          price: 15,
+          tier: "basic",
+          features: [
+            { name: "Project Submission", description: "Launch and showcase your business projects/year", value: "3" },
+            { name: "Pitch Deck Builder", description: "Build compelling decks with AI", value: "3" },
+            { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
+            { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
+          ],
+        },
+        {
+          title: "Pro",
+          price: 49,
+          tier: "pro",
+          features: [
+            { name: "Project Submission", description: "Launch and showcase your business projects/year", value: "5" },
+            { name: "Pitch Deck Builder", description: "Build compelling decks with AI", value: "5" },
+            { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Once a month" },
+            { name: "Analytics Access", description: "Track your reach and visibility", value: "365" },
+          ],
+        },
+        {
+          title: "Elite",
+          price: 199,
+          tier: "elite",
+          features: [
+            { name: "Project Submission", description: "Launch and showcase your business projects/year", value: "10" },
+            { name: "Pitch Deck Builder", description: "Build compelling decks with AI", value: "10" },
+            { name: "Profile Updates", description: "Keep your profile fresh and active", value: "Twice a month" },
+            { name: "Analytics Access", description: "Track your reach and visibility", value: "No limit" },
+          ],
+        },
+      ];
+    } else if (type === 'agent') {
+      return [
+        {
+          title: "Basic",
+          price: 29,
+          tier: "basic",
+          features: [
+            { name: "Search Access", description: "Browse a set number of entrepreneur and investor profiles", value: "250" },
+            { name: "Service Listing", description: "List services in the Agent Directory to attract leads", value: "3" },
+            { name: "Document Review", description: "Basic access to pitch decks and shared documents", value: "100" },
+          ],
+        },
+        {
+          title: "Pro",
+          price: 129,
+          tier: "pro",
+          features: [
+            { name: "Search Access", description: "Browse a set number of entrepreneur and investor profiles", value: "1000" },
+            { name: "Service Listing", description: "List services in the Agent Directory to attract leads", value: "5" },
+            { name: "Document Review", description: "Basic access to pitch decks and shared documents", value: "500" },
+          ],
+        },
+        {
+          title: "Elite",
+          price: 299,
+          tier: "elite",
+          features: [
+            { name: "Search Access", description: "Browse a set number of entrepreneur and investor profiles", value: "Unlimited" },
+            { name: "Service Listing", description: "List services in the Agent Directory to attract leads", value: "15" },
+            { name: "Document Review", description: "Basic access to pitch decks and shared documents", value: "Unlimited" },
+          ],
+        },
+      ];
+    } else {
+      return [
+        {
+          title: "Basic",
+          price: 15,
+          tier: "basic",
+          features: [
+            { name: "Project Search", description: "Explore startups by region or type", value: "250" },
+            { name: "Investor Dashboard", description: "View saved and contacted startups", value: "365 days" },
+            { name: "Connection Access", description: "Contact entrepreneurs and agents yearly", value: "100" },
+          ],
+        },
+        {
+          title: "Pro",
+          price: 49,
+          tier: "pro",
+          features: [
+            { name: "Project Search", description: "Explore startups by region or type", value: "20" },
+            { name: "Investor Dashboard", description: "View saved and contacted startups", value: "365 days" },
+            { name: "Connection Access", description: "Contact entrepreneurs and agents yearly", value: "No limit" },
+          ],
+        },
+        {
+          title: "Elite",
+          price: 199,
+          tier: "elite",
+          features: [
+            { name: "Project Search", description: "Explore startups by region or type", value: "30" },
+            { name: "Investor Dashboard", description: "View saved and contacted startups", value: "365 days" },
+            { name: "Connection Access", description: "Contact entrepreneurs and agents yearly", value: "No limit" },
+          ],
+        },
+      ];
+    }
+  };
 
   return (
     <>
@@ -283,33 +312,53 @@ const Pricing = () => {
 
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <PlanSection
-            title="Entrepreneur Plans"
-            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>}
-            plans={entrepreneurPlans}
-          />
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-gray-600">Loading subscription plans...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-lg text-red-600">{error}</p>
+            </div>
+          ) : (
+            <>
+              {subscriptions.entrepreneur && subscriptions.entrepreneur.length > 0 && (
+                <>
+                  <PlanSection
+                    title="Entrepreneur Plans"
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>}
+                    plans={subscriptions.entrepreneur}
+                  />
+                  <div className="border-t border-gray-200 my-16"></div>
+                </>
+              )}
 
-          <div className="border-t border-gray-200 my-16"></div>
+              {subscriptions.agent && subscriptions.agent.length > 0 && (
+                <>
+                  <PlanSection
+                    title="Agent Plans"
+                    icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>}
+                    plans={subscriptions.agent}
+                  />
+                  <div className="border-t border-gray-200 my-16"></div>
+                </>
+              )}
 
-          <PlanSection
-            title="Agent Plans"
-            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>}
-            plans={agentPlans}
-          />
-
-          <div className="border-t border-gray-200 my-16"></div>
-
-          <PlanSection
-            title="Investor Plans"
-            icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>}
-            plans={investorPlans}
-          />
+              {subscriptions.investor && subscriptions.investor.length > 0 && (
+                <PlanSection
+                  title="Investor Plans"
+                  icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>}
+                  plans={subscriptions.investor}
+                />
+              )}
+            </>
+          )}
         </div>
       </div>
       <Foooter />
