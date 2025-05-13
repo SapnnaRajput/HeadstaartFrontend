@@ -36,6 +36,7 @@ import InvestorPage from './component/Home/InvestorPage.jsx'
 import AgentPage from './component/Home/AgentPage.jsx'
 import TermsAndConditions from './component/Home/TermsConditions.jsx';
 import AboutUsPage from './component/Home/AboutUs.jsx'
+import Pricing from './component/Home/Pricing.jsx'
 import LoginAs from './component/LogIn/LoginAs.jsx'
 import Privacypolicy from './Utiles/Privacypolicy.jsx';
 import Deleteaccount from './Utiles/Deleteaccount.jsx';
@@ -176,8 +177,8 @@ function App() {
           <Route path="/contact-us" element={<Contactus />} />
           <Route path="/entrepreneur" element={<EntrepreneurPage />} />
           <Route path="/investor" element={<InvestorPage />} />
-          <Route path="/investor" element={<InvestorPage />} />
           <Route path="/agent" element={<AgentPage />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path= "/terms-conditions" element={<TermsAndConditions />} />
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/events" element={<EventPage />} />

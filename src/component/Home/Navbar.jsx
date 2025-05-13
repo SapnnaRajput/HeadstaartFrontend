@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import Loader from '../../Utiles/Loader';
@@ -22,6 +22,7 @@ const Navbar = () => {
   };
 
   const navLinks = [
+    {label: "Pricing", href: '/pricing'},
     { label: 'Entrepreneurs', href: '/entrepreneur' },
     { label: 'Investors', href: '/investor' },
     { label: 'Agents', href: '/agent' },
