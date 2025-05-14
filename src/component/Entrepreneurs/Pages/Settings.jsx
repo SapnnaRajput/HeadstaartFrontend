@@ -18,16 +18,14 @@ import VerificationModal from '../../Investors/VarifyInvestor';
 import { loadStripe } from '@stripe/stripe-js';
 import useStripeCredentials from '../../../Utiles/StripePublicKey'
 import BillingAndInvoice from './BillingAndInvoice';
-
-
-
+import ProfileBoost from './ProfileBoost';
 
 const Settings = () => {
     const baseUrl = import.meta.env.VITE_APP_BASEURL;
     const navigate = useNavigate();
     const { user, logout, setUser } = UserState();
     const [loading, setLoading] = useState(true);
-    const tabs = ['Edit Profile', 'Billing & Invoices'] 
+    const tabs = ['Edit Profile', 'Billing & Invoices', 'Boost Profile']
     const [data, setData] = useState({});
     const [active, setActive] = useState(tabs[0])
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -81,23 +79,21 @@ const Settings = () => {
         },
     ]
 
-     
-    
-      useEffect(() => {
+    useEffect(() => {
         const initializeStripe = async () => {
-          if (publicKey) {
-            try {
-              const stripe = await loadStripe(publicKey);
-              setStripeInstance(stripe);
-            } catch (error) {
-              console.error('Error initializing Stripe:', error);
-              notify('error', 'Failed to initialize payment system');
+            if (publicKey) {
+                try {
+                    const stripe = await loadStripe(publicKey);
+                    setStripeInstance(stripe);
+                } catch (error) {
+                    console.error('Error initializing Stripe:', error);
+                    notify('error', 'Failed to initialize payment system');
+                }
             }
-          }
         };
-    
+
         initializeStripe();
-      }, [publicKey]);
+    }, [publicKey]);
     const RequiredLabel = ({ text }) => (
         <div className="block text-base text-black mb-2">
             {text}
@@ -106,26 +102,26 @@ const Settings = () => {
 
     useEffect(() => {
         if (addressDetail?.country) {
-          setSelectedCountry({
-            label: addressDetail.country.country_name,
-            value: addressDetail.country.country_id
-          });
-          
-          if (addressDetail?.state) {
-            setSelectedState({
-              label: addressDetail.state.state_subdivision_name,
-              value: addressDetail.state.state_subdivision_id
+            setSelectedCountry({
+                label: addressDetail.country.country_name,
+                value: addressDetail.country.country_id
             });
-            
-            if (addressDetail?.city) {
-              setSelectedCity({
-                label: addressDetail.city.name_of_city,
-                value: addressDetail.city.cities_id
-              });
+
+            if (addressDetail?.state) {
+                setSelectedState({
+                    label: addressDetail.state.state_subdivision_name,
+                    value: addressDetail.state.state_subdivision_id
+                });
+
+                if (addressDetail?.city) {
+                    setSelectedCity({
+                        label: addressDetail.city.name_of_city,
+                        value: addressDetail.city.cities_id
+                    });
+                }
             }
-          }
         }
-      }, [addressDetail]);
+    }, [addressDetail]);
 
     useEffect(() => {
         if (isOpen) {
@@ -238,8 +234,8 @@ const Settings = () => {
         mobile: '',
         address: '',
         zip_code: '',
-        deal_per : '',
-        about_me :''
+        deal_per: '',
+        about_me: ''
     });
 
     useEffect(() => {
@@ -252,8 +248,8 @@ const Settings = () => {
             country: data?.address_detail?.country?.country_id || '',
             state: data?.address_detail?.state?.state_subdivision_id || '',
             city: data?.address_detail?.city?.cities_id || '',
-            deal_per : data?.deal_per || '',
-            about_me : data?.about_me || '',
+            deal_per: data?.deal_per || '',
+            about_me: data?.about_me || '',
         });
         setProfile(data.customer_profile_image)
     }, [data]);
@@ -325,9 +321,9 @@ const Settings = () => {
                         student_identity: response.data.data.student_identity
                     }
                 };
-    
+
                 setUser(updatedUser);
-                localStorage.setItem('user', JSON.stringify(updatedUser)); 
+                localStorage.setItem('user', JSON.stringify(updatedUser));
                 notify('success', 'Profile updated successfully');
                 setIsEditing(false);
                 setRefrash(prev => prev + 1);
@@ -635,13 +631,13 @@ const Settings = () => {
                 notify('error', 'Please fill all required fields correctly');
                 return;
             }
-            
-            if(!formData.frontImage){
+
+            if (!formData.frontImage) {
                 notify('error', 'Please Upload ID Front Side Photo');
                 return;
             }
 
-            if(!formData.frontImage){
+            if (!formData.frontImage) {
                 notify('error', 'Please Upload ID Back Side Photo');
                 return;
             }
@@ -681,16 +677,16 @@ const Settings = () => {
             if (response.data.status) {
                 const { error } = await stripeInstance.redirectToCheckout({
                     sessionId: response.data.id
-                  });
-                  
-                  if (error) {
+                });
+
+                if (error) {
                     notify('error', error.message);
-                  }
+                }
             }
 
             if (response.data.status) {
 
-                
+
                 notify('success', 'Profile verification submitted successfully');
 
                 setIsOpen(false);
@@ -868,18 +864,18 @@ const Settings = () => {
                                     className="w-full px-4 py-2.5 border border-gray-300 rounded mb-5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                 />
                                 {user.role === 'agent' &&
-                                <>
-                                <RequiredLabel text='Deal Percentage' />
-                                <input
-                                    type="text"
-                                    value={formdata?.deal_per}
-                                    name='deal_per'
-                                    onChange={handleInputChange}
-                                    readOnly={!isEditing}
-                                    placeholder="Type Here..."
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded mb-5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                />
-                                </>
+                                    <>
+                                        <RequiredLabel text='Deal Percentage' />
+                                        <input
+                                            type="text"
+                                            value={formdata?.deal_per}
+                                            name='deal_per'
+                                            onChange={handleInputChange}
+                                            readOnly={!isEditing}
+                                            placeholder="Type Here..."
+                                            className="w-full px-4 py-2.5 border border-gray-300 rounded mb-5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        />
+                                    </>
                                 }
                             </div>
                             <div className="md:w-2/5 w-full">
@@ -905,19 +901,19 @@ const Settings = () => {
                                     labelClass="block text-base text-black mb-2"
                                     inputClass=" border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 focus:border-transparent mb-5"
                                 />
-                                   {user.role === 'agent' &&
-                                <>
-                                <RequiredLabel text='About Me' />
-                                <textarea
-                                    type="text"
-                                    value={formdata?.about_me}
-                                    name='about_me'
-                                    onChange={handleInputChange}
-                                    readOnly={!isEditing}
-                                    placeholder="Type Here..."
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded mb-5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                                />
-                                </>}
+                                {user.role === 'agent' &&
+                                    <>
+                                        <RequiredLabel text='About Me' />
+                                        <textarea
+                                            type="text"
+                                            value={formdata?.about_me}
+                                            name='about_me'
+                                            onChange={handleInputChange}
+                                            readOnly={!isEditing}
+                                            placeholder="Type Here..."
+                                            className="w-full px-4 py-2.5 border border-gray-300 rounded mb-5 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                        />
+                                    </>}
                             </div>
 
                         </div>
@@ -960,9 +956,14 @@ const Settings = () => {
                     </>
                 }
                 {active === tabs[1] &&
-                   <>
-                   <BillingAndInvoice/>
-                   </>
+                    <>
+                        <BillingAndInvoice />
+                    </>
+                }
+                {active === tabs[2] &&
+                    <>
+                        <ProfileBoost />
+                    </>
                 }
             </div>
             <Modal show={openModal} onClose={() => setOpenModal(false)}>
@@ -1066,7 +1067,7 @@ const Settings = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Upload ID Front Side Photo<span className='text-red-500'>*</span></label>
                                     <div className="mt-1 flex flex-col w-full">
-                                        <label className={`w-full flex flex-col items-center px-4 py-4 bg-white rounded-lg border ${ errors.frontImage ? 'border-red-500' : 'border-gray-300' } cursor-pointer hover:bg-gray-50`}>
+                                        <label className={`w-full flex flex-col items-center px-4 py-4 bg-white rounded-lg border ${errors.frontImage ? 'border-red-500' : 'border-gray-300'} cursor-pointer hover:bg-gray-50`}>
                                             {previews.frontImage ? (
                                                 <div className="flex flex-col items-center">
                                                     <img src={previews.frontImage} alt="Front Preview" className="w-20 h-20 object-cover mb-2" />
@@ -1090,7 +1091,7 @@ const Settings = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Upload ID Back Side Photo <span className='text-red-500'>*</span></label>
                                     <div className="mt-1 flex flex-col items-center justify-center w-full">
-                                    <label className={`w-full flex flex-col items-center px-4 py-4 bg-white rounded-lg border ${ errors.backImage ? 'border-red-500' : 'border-gray-300' } cursor-pointer hover:bg-gray-50`}>
+                                        <label className={`w-full flex flex-col items-center px-4 py-4 bg-white rounded-lg border ${errors.backImage ? 'border-red-500' : 'border-gray-300'} cursor-pointer hover:bg-gray-50`}>
                                             {previews.backImage ? (
                                                 <div className="flex flex-col items-center">
                                                     <img src={previews.backImage} alt="Back Preview" className="w-20 h-20 object-cover mb-2" />

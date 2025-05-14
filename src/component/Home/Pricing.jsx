@@ -1,8 +1,9 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import Foooter from './Foooter';
 import { FiCheck, FiCircle, FiStar, FiAward } from 'react-icons/fi';
 import axios from 'axios';
+import { BadgeCheck } from "lucide-react";
 
 const PricingCard = ({ title, price, features, tier }) => {
   const getTierIcon = () => {
@@ -31,21 +32,21 @@ const PricingCard = ({ title, price, features, tier }) => {
         {getTierIcon()}
         <h3 className={`text-xl font-bold ${getTierColor()}`}>{title}</h3>
       </div>
-      
+
       <div className="mb-6">
         <div className="flex items-baseline">
           <span className="text-3xl font-bold">${price}</span>
           <span className="text-gray-500 ml-1">/month</span>
         </div>
       </div>
-      
+
       <div className="mt-2">
         <h4 className="font-medium text-gray-700 mb-2">{title}</h4>
-        
+
         <ul className="space-y-3">
           {features.map((feature, index) => (
             <li key={index} className="flex items-start gap-2">
-              <FiCheck className="text-blue-500 mt-1 flex-shrink-0" />
+              <BadgeCheck className={`mt-1 flex-shrink-0 text-blue-500`} />
               <div>
                 <div className="font-medium">{feature.name}</div>
                 <div className="text-gray-500 text-sm">
@@ -91,60 +92,46 @@ const Pricing = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const baseUrl = import.meta.env.VITE_APP_BASEURL;
+
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('https://api.headstaart.com/api/getSubscriptions');
-        
-        if (response.data && response.data.data) {
-          // Process the API response to match our component structure
+        const response = await axios.get(`${baseUrl}/getSubscriptions`);
+
+        if (response.data && response.data.Subscriptiondata) {
+          // Group subscriptions by role
           const processedData = {
             entrepreneur: [],
             agent: [],
             investor: []
           };
 
-          // Process each subscription type
-          Object.entries(response.data.data).forEach(([key, plans]) => {
-            if (key === 'entrepreneur' || key === 'agent' || key === 'investor') {
-              processedData[key] = plans.map(plan => {
-                // Format features from API data
-                const features = [];
-                
-                // Extract features from the plan object
-                Object.entries(plan).forEach(([featureKey, featureValue]) => {
-                  // Skip non-feature properties
-                  if (['id', 'title', 'price', 'tier', 'type', 'created_at', 'updated_at'].includes(featureKey)) {
-                    return;
-                  }
-                  
-                  // Add feature with name and value
-                  features.push({
-                    name: featureKey.replace(/_/g, ' ').split(' ')
-                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                      .join(' '),
-                    description: getFeatureDescription(featureKey),
-                    value: featureValue || ''
-                  });
-                });
-                
-                return {
-                  title: plan.title || '',
-                  price: plan.price || 0,
-                  tier: plan.tier || 'basic',
-                  features: features
-                };
-              });
+          response.data.Subscriptiondata.forEach(subscription => {
+            const role = subscription.role.toLowerCase();
+            if (['entrepreneur', 'agent', 'investor'].includes(role)) {
+              const plan = {
+                title: subscription.subscription_name,
+                price: parseFloat(subscription.subscription_price),
+                tier: subscription.subscription_name.toLowerCase(),
+                features: subscription.subscription_details.map(detail => ({
+                  name: detail.functionality,
+                  description: detail.description,
+                  value: detail.limit,
+                  status: detail.status
+                }))
+              };
+
+              processedData[role].push(plan);
             }
           });
-          
+
           setSubscriptions(processedData);
         }
       } catch (err) {
         console.error('Error fetching subscription data:', err);
         setError('Failed to load subscription data. Please try again later.');
-        // Use fallback data if API fails
         setSubscriptions({
           entrepreneur: getFallbackPlans('entrepreneur'),
           agent: getFallbackPlans('agent'),
@@ -154,7 +141,7 @@ const Pricing = () => {
         setLoading(false);
       }
     };
-    
+
     fetchSubscriptions();
   }, []);
 
@@ -183,7 +170,7 @@ const Pricing = () => {
       lead_access: 'Purchase leads to start conversations',
       entrepreneur_contact_limit: 'Number of entrepreneurs you can contact'
     };
-    
+
     return descriptions[featureKey] || featureKey.replace(/_/g, ' ');
   };
 

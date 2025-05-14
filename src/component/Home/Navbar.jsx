@@ -22,11 +22,11 @@ const Navbar = () => {
   };
 
   const navLinks = [
-    {label: "Pricing", href: '/pricing'},
     { label: 'Entrepreneurs', href: '/entrepreneur' },
     { label: 'Investors', href: '/investor' },
     { label: 'Agents', href: '/agent' },
-    { label: 'Events', href: '/events' }
+    { label: 'Events', href: '/events' },
+    {label: "Pricing", href: '/pricing'}
   ];
 
   return (
