@@ -1,7 +1,39 @@
 import React from 'react';
 import { FiCheck } from 'react-icons/fi';
+import axios from 'axios';
+import { UserState } from '../../../context/UserContext';
+import { notify } from '../../../Utiles/Notification';
 
-const BoostCard = ({ title, price, duration, features }) => {
+const BoostCard = ({ id, title, price, duration, features }) => {
+
+    const baseUrl = import.meta.env.VITE_APP_BASEURL;
+
+    const { user, logout, setUser } = UserState();
+
+    const handleBoostClick = async () => {
+        try {
+            const response = await axios.post(`${baseUrl}/profile-boosts`, {
+                subscription_id: id,
+                customer_unique_id: user?.customer.customer_unique_id,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${user?.token}`
+                }
+            });
+
+            console.log(user);
+
+            if (response.data.status) {
+                notify('success', 'Profile boost purchased successfully');
+            } else {
+                notify('error', response.data.message);
+            }
+        } catch (error) {
+            console.error(error);
+            notify('error', error.response?.data?.message || 'Failed to purchase boost');
+        }
+    };
+
     return (
         <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
             <h3 className="text-xl font-bold text-gray-900">{title}</h3>
@@ -17,7 +49,7 @@ const BoostCard = ({ title, price, duration, features }) => {
                     </li>
                 ))}
             </ul>
-            <button className="mt-8 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            <button onClick={handleBoostClick} className="mt-8 w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
                 Boost Now
             </button>
         </div>
@@ -27,6 +59,7 @@ const BoostCard = ({ title, price, duration, features }) => {
 const ProfileBoost = () => {
     const boostPlans = [
         {
+            id: 1,
             title: "7-Day Spotlight",
             price: 29,
             duration: "week",
@@ -39,6 +72,7 @@ const ProfileBoost = () => {
             ]
         },
         {
+            id: 2,
             title: "30-Day Growth",
             price: 79,
             duration: "month",
@@ -52,6 +86,7 @@ const ProfileBoost = () => {
             ]
         },
         {
+            id: 3,
             title: "90-Day Premium",
             price: 199,
             duration: "3 months",
