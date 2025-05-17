@@ -18,14 +18,14 @@ import VerificationModal from '../../Investors/VarifyInvestor';
 import { loadStripe } from '@stripe/stripe-js';
 import useStripeCredentials from '../../../Utiles/StripePublicKey'
 import BillingAndInvoice from './BillingAndInvoice';
-import ProfileBoost from './ProfileBoost';
+
 
 const Settings = () => {
     const baseUrl = import.meta.env.VITE_APP_BASEURL;
     const navigate = useNavigate();
     const { user, logout, setUser } = UserState();
     const [loading, setLoading] = useState(true);
-    const tabs = ['Edit Profile', 'Billing & Invoices', 'Boost Profile']
+    const tabs = ['Edit Profile', 'Billing & Invoices']
     const [data, setData] = useState({});
     const [active, setActive] = useState(tabs[0])
     const [selectedCountry, setSelectedCountry] = useState("");
@@ -958,11 +958,6 @@ const Settings = () => {
                 {active === tabs[1] &&
                     <>
                         <BillingAndInvoice />
-                    </>
-                }
-                {active === tabs[2] &&
-                    <>
-                        <ProfileBoost />
                     </>
                 }
             </div>

@@ -55,6 +55,8 @@ import LeadManage from "../AdminComponent/LeadManage";
 import Credentials from "../AdminComponent/Credentials";
 import EmployeeManagement from "../AdminComponent/EmployeeManagement";
 import ActivityLogs from '../AdminComponent/ActivityLogs';
+import ProfileBoostedUsers from "../AdminComponent/ProfileBoostedUsers";
+import ProfileBoostPlans from "../AdminComponent/ProfileBoostPlans";
 
 const Admin = () => {
   const Links = [
@@ -156,6 +158,16 @@ const Admin = () => {
     {
       to: "employee-management",
       name: "Employee Management",
+      icon: Users,
+    },
+    {
+      to: "profile-boost-plans",
+      name: "Boost Plans",
+      icon: BadgeDollarSign,
+    },
+    {
+      to: "profile-boosted-users",
+      name: "Boosted Users",
       icon: Users,
     }
   ];
@@ -277,6 +289,8 @@ const Admin = () => {
               <Route path="/lead-manage" element={<LeadManage />} />
               <Route path="/credentials" element={<Credentials />} />
               <Route path="/activity-logs" element={<ActivityLogs />} />
+              <Route path="/profile-boosted-users" element={<ProfileBoostedUsers />} />
+              <Route path="/profile-boost-plans" element={<ProfileBoostPlans />} />
             </Routes>
           </div>
         </div>

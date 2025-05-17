@@ -27,6 +27,7 @@ import { notify } from "../../../Utiles/Notification";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import SelectDropdown from "../../../Utiles/SelectDropdown";
+import ProfileBoost from './ProfileBoost';
 
 Highcharts3D(Highcharts);
 
@@ -310,6 +311,13 @@ const Dashboard = () => {
               >
                 Manage Lead
               </Link>
+              <Link
+                to={`/${user.role}/boost-profile`}
+                onClick={() => setIsOpen(true)}
+                className="whitespace-nowrap px-4 py-2.5 text-base font-medium text-[#4A3AFF] bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all duration-200"
+              >
+                Boost Profile
+              </Link>
             </div>
           )}
 
@@ -347,6 +355,13 @@ const Dashboard = () => {
                 Manage Lead
               </Link>
               <Link
+                to={`/${user.role}/boost-profile`}
+                onClick={() => setIsOpen(true)}
+                className="whitespace-nowrap px-4 py-2.5 text-base font-medium text-[#4A3AFF] bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-all duration-200"
+              >
+                Boost Profile
+              </Link>
+              <Link
                 to="/agent/feature-projects"
                 className="whitespace-nowrap px-4 py-2.5 rounded-xl bg-[#4A3AFF] text-white text-base capitalize flex items-center gap-2"
               >
@@ -357,19 +372,19 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link>
-          <div className="rounded-xl bg-[#FFE2E5] flex flex-col p-4 gap-4">
-           
-            <div className="bg-[#FA5A7D] rounded-full p-2 text-white w-fit">
-              <ChartNoAxesColumnIncreasing size={24} />
+          <Link>
+            <div className="rounded-xl bg-[#FFE2E5] flex flex-col p-4 gap-4">
+
+              <div className="bg-[#FA5A7D] rounded-full p-2 text-white w-fit">
+                <ChartNoAxesColumnIncreasing size={24} />
+              </div>
+              <h1 className="font-semibold text-xl md:text-2xl text-[#151D48]">
+                {countStatus.activeProject}
+              </h1>
+              <span className="text-base md:text-lg font-medium text-[#425166]">
+                Active Project
+              </span>
             </div>
-            <h1 className="font-semibold text-xl md:text-2xl text-[#151D48]">
-              {countStatus.activeProject}
-            </h1>
-            <span className="text-base md:text-lg font-medium text-[#425166]">
-              Active Project
-            </span>
-          </div>
           </Link>
           <div className="rounded-xl bg-[#FFF4DE] flex flex-col p-4 gap-4">
             <div className="bg-[#FF947A] rounded-full p-2 text-white w-fit">
@@ -395,91 +410,91 @@ const Dashboard = () => {
             </span>
           </div>
           <Link to={`/${user?.role}/documents`}>
-          <div className="rounded-xl bg-[#E0F2FE] p-4">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-base md:text-lg font-medium text-[#425166]">
-                Documents
-              </span>
-              <div className="bg-[#3B82F6] rounded-full p-2 text-white">
-                <Files size={20} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-white rounded-lg p-2 md:p-3">
-                <div className="flex items-center gap-1 md:gap-2 mb-2">
-                  <Clock1 className="text-[#3B82F6] w-4 h-4" />
-                  <span className="text-xs md:text-sm font-medium text-[#425166]">
-                    Pending
-                  </span>
-                </div>
-                <span className="text-lg md:text-xl font-semibold text-[#151D48]">
-                  {countStatus.documentPending}
-                </span>
-              </div>
-
-              <div className="bg-white rounded-lg p-2 md:p-3">
-                <div className="flex items-center gap-1 md:gap-2 mb-2">
-                  <CheckCircle className="text-green-500 w-4 h-4" />
-                  <span className="text-xs md:text-sm font-medium text-[#425166]">
-                    Signed
-                  </span>
-                </div>
-                <span className="text-lg md:text-xl font-semibold text-[#151D48]">
-                  {countStatus.documentSigned}
-                </span>
-              </div>
-            </div>
-          </div>
-         </Link>
-          {countStatus.remainingDays > 0 && (
-            <Link to={`/${user?.role}/subscription`}>
-            <div className="rounded-xl bg-[#F3E8FF] p-4">
+            <div className="rounded-xl bg-[#E0F2FE] p-4">
               <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="bg-[#9333EA] rounded-full p-2 text-white">
-                    <Crown size={20} />
-                  </div>
-                  <span className="text-base md:text-lg font-medium text-[#425166]">
-                    {countStatus.subscription.subscription_name}
-                  </span>
-                </div>
-                <span className="text-xs md:text-sm bg-[#9333EA] text-white px-2 md:px-3 py-1 rounded-full">
-                  Active
+                <span className="text-base md:text-lg font-medium text-[#425166]">
+                  Documents
                 </span>
+                <div className="bg-[#3B82F6] rounded-full p-2 text-white">
+                  <Files size={20} />
+                </div>
               </div>
 
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between items-center mb-2">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-white rounded-lg p-2 md:p-3">
+                  <div className="flex items-center gap-1 md:gap-2 mb-2">
+                    <Clock1 className="text-[#3B82F6] w-4 h-4" />
                     <span className="text-xs md:text-sm font-medium text-[#425166]">
-                      Subscription ends in
-                    </span>
-                    <span className="text-xs md:text-sm font-semibold text-[#151D48]">
-                      {formattedDate}
-                    </span>
-                  </div>
-                  <div className="w-full bg-[#E9D5FF] rounded-full h-2">
-                    <div
-                      className="bg-[#9333EA] h-2 rounded-full"
-                      style={{ width: `${percentageRemaining}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg p-3 flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <Calendar1 className="text-[#9333EA] w-4 h-4 md:w-5 md:h-5" />
-                    <span className="text-xs md:text-sm font-medium text-[#425166]">
-                      Days Remaining
+                      Pending
                     </span>
                   </div>
                   <span className="text-lg md:text-xl font-semibold text-[#151D48]">
-                    {countStatus.remainingDays}
+                    {countStatus.documentPending}
+                  </span>
+                </div>
+
+                <div className="bg-white rounded-lg p-2 md:p-3">
+                  <div className="flex items-center gap-1 md:gap-2 mb-2">
+                    <CheckCircle className="text-green-500 w-4 h-4" />
+                    <span className="text-xs md:text-sm font-medium text-[#425166]">
+                      Signed
+                    </span>
+                  </div>
+                  <span className="text-lg md:text-xl font-semibold text-[#151D48]">
+                    {countStatus.documentSigned}
                   </span>
                 </div>
               </div>
             </div>
+          </Link>
+          {countStatus.remainingDays > 0 && (
+            <Link to={`/${user?.role}/subscription`}>
+              <div className="rounded-xl bg-[#F3E8FF] p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <div className="bg-[#9333EA] rounded-full p-2 text-white">
+                      <Crown size={20} />
+                    </div>
+                    <span className="text-base md:text-lg font-medium text-[#425166]">
+                      {countStatus.subscription.subscription_name}
+                    </span>
+                  </div>
+                  <span className="text-xs md:text-sm bg-[#9333EA] text-white px-2 md:px-3 py-1 rounded-full">
+                    Active
+                  </span>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs md:text-sm font-medium text-[#425166]">
+                        Subscription ends in
+                      </span>
+                      <span className="text-xs md:text-sm font-semibold text-[#151D48]">
+                        {formattedDate}
+                      </span>
+                    </div>
+                    <div className="w-full bg-[#E9D5FF] rounded-full h-2">
+                      <div
+                        className="bg-[#9333EA] h-2 rounded-full"
+                        style={{ width: `${percentageRemaining}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-3 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Calendar1 className="text-[#9333EA] w-4 h-4 md:w-5 md:h-5" />
+                      <span className="text-xs md:text-sm font-medium text-[#425166]">
+                        Days Remaining
+                      </span>
+                    </div>
+                    <span className="text-lg md:text-xl font-semibold text-[#151D48]">
+                      {countStatus.remainingDays}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </Link>
           )}
         </div>
@@ -502,11 +517,10 @@ const Dashboard = () => {
                       {event.event_title}
                     </h3>
                     <span
-                      className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${
-                        event.event_price === "0"
-                          ? "bg-emerald-100 text-emerald-700"
-                          : "bg-blue-100 text-blue-700"
-                      }`}
+                      className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${event.event_price === "0"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-blue-100 text-blue-700"
+                        }`}
                     >
                       {event.event_price === "0"
                         ? "Free"

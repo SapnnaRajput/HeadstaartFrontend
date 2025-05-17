@@ -113,7 +113,22 @@ const ActivityLogs = () => {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm text-gray-500">{log.location}</div>
+                                        <div className="text-sm text-gray-500">
+                                            {(() => {
+                                                if (!log.location || log.location === 'NA') {
+                                                    return 'NA';
+                                                }
+                                                if (!log.location || log.location === 'localhost') {
+                                                    return 'localhost';
+                                                }
+                                                try {
+                                                    const locationData = JSON.parse(log.location);
+                                                    return `${locationData.city}, ${locationData.region}, ${locationData.country_name}`;
+                                                } catch (error) {
+                                                    return 'Invalid location data';
+                                                }
+                                            })()}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 capitalize">
@@ -143,7 +158,7 @@ const ActivityLogs = () => {
             {isLoading && <Loader />}
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-2xl md:text-3xl font-bold text-black mb-8">Activity Logs</h1>
-                
+
                 <ActivityTable logs={employeeLogs} title="Employee Activity Logs" />
                 <ActivityTable logs={customerLogs} title="Customer Activity Logs" />
             </div>

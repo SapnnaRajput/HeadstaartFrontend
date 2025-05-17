@@ -70,6 +70,7 @@ import InvestorDetails from "./Pages/InvestorDetails";
 import UpcommingEventDetails from "./Pages/UpcommingEventDetails";
 import AgentProfile from "./Pages/AgentProfile";
 import Loader from "../../Utiles/Loader";
+import ProfileBoost from "./Pages/ProfileBoost";
 
 const Home = () => {
   const baseUrl = import.meta.env.VITE_APP_BASEURL;
@@ -481,6 +482,7 @@ const Home = () => {
               />
               <Route path="promote-project" element={<PromoteProject />} />
               <Route path="map/filter_agent/:id" element={<Singleagent />} />
+              <Route path="boost-profile" element={<ProfileBoost />} />
             </Routes>
           </div>
         </div>

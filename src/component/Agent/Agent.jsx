@@ -57,6 +57,7 @@ import InvestorDetails from "./InvestorDetails";
 import SingleProjectinvestor from './../Investors/SingleProjectinvestor'
 import EnterpreneurProfile from "./EnterpreneurProfile";
 import SingleProjectDetails from "../Agent/SingleProjectDetails"
+import ProfileBoost from "../Entrepreneurs/Pages/ProfileBoost";
 
 const Agent = () => {
   const baseUrl = import.meta.env.VITE_APP_BASEURL;
@@ -367,6 +368,7 @@ const Agent = () => {
               <Route path="e-sign-document" element={<EsignDocumetnt />} />
               <Route path="documents" element={<MyDocument />} />
               <Route path="projects/:id" element={<SingleProjectinvestor />} />
+              <Route path="boost-profile" element={<ProfileBoost />} />
               {/* <Route path='documents' element={<Document />} />
                             <Route path='settings/verification' element={<Verification />} />
                             <Route path='investor-approached' element={<Investor investor={investor} />} />
